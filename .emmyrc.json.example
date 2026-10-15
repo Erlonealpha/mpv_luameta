@@ -1,0 +1,29 @@
+{
+  "diagnostics": {
+    "disable": [
+      "unnecessary-if"
+    ]
+  },
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "workspace": {
+    "enableReindex": true,
+    "encoding": "utf-8",
+    "ignoreDir": [],
+    "ignoreGlobs": ["**/hashlib/pure_sha.lua"],
+    "library": [],
+    "moduleMap": [],
+    "packages": [
+      {
+        "path": "/path/to/mpv_luameta"
+      },
+      {
+        "path": "/path/to/mpv_luameta/mp"
+      }
+    ],
+    "preloadFileSize": 0,
+    "reindexDuration": 10000,
+    "workspaceRoots": []
+  }
+}
