@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE. ]]
 
+---@meta
 -- The lua implementation of the fzy string matching algorithm
 
 local SCORE_GAP_LEADING = -0.005
@@ -34,21 +35,16 @@ local SCORE_MAX = math.huge
 local SCORE_MIN = -math.huge
 local MATCH_MAX_LENGTH = 1024
 
+---@class mp_fzy
 local fzy = {}
-
----@meta
 
 -- Check if `needle` is a subsequence of the `haystack`.
 --
 -- Usually called before `score` or `positions`.
---
--- Args:
---   needle (string)
---   haystack (string)
---   case_sensitive (bool, optional): defaults to false
---
--- Returns:
---   bool
+---@param needle string
+---@param haystack string
+---@param case_sensitive boolean? defaults to false
+---@return boolean
 function fzy.has_match(needle, haystack, case_sensitive)
   if not case_sensitive then
     needle = string.lower(needle)
@@ -150,16 +146,10 @@ local function compute(needle, haystack, D, M, case_sensitive)
 end
 
 -- Compute a matching score.
---
--- Args:
---   needle (string): must be a subsequence of `haystack`, or the result is
---     undefined.
---   haystack (string)
---   case_sensitive (bool, optional): defaults to false
---
--- Returns:
---   number: higher scores indicate better matches. See also `get_score_min`
---     and `get_score_max`.
+---@param needle string must be a subsequence of `haystack`, or the result is undefined.
+---@param haystack string
+---@param case_sensitive boolean? defaults to false
+---@return number higher scores indicate better matches. See also `get_score_min` and `get_score_max`.
 function fzy.score(needle, haystack, case_sensitive)
   local n = string.len(needle)
   local m = string.len(haystack)
@@ -180,17 +170,11 @@ end
 --
 -- Determine where each character of the `needle` is matched to the `haystack`
 -- in the optimal match.
---
--- Args:
---   needle (string): must be a subsequence of `haystack`, or the result is
---     undefined.
---   haystack (string)
---   case_sensitive (bool, optional): defaults to false
---
--- Returns:
---   {int,...}: indices, where `indices[n]` is the location of the `n`th
---     character of `needle` in `haystack`.
---   number: the same matching score returned by `score`
+---@param needle string must be a subsequence of `haystack`, or the result is undefined.
+---@param haystack string
+---@param case_sensitive boolean? defaults to false
+---@return int[] indices, where `indices[n]` is the location of the `n`th character of `needle` in `haystack`.
+---@return number the same matching score returned by `score`
 function fzy.positions(needle, haystack, case_sensitive)
   local n = string.len(needle)
   local m = string.len(haystack)
@@ -230,17 +214,13 @@ function fzy.positions(needle, haystack, case_sensitive)
 end
 
 -- Apply `has_match` and `positions` to an array of haystacks.
---
--- Args:
---   needle (string)
---   haystack ({string, ...})
---   case_sensitive (bool, optional): defaults to false
---
--- Returns:
---   {{idx, positions, score}, ...}: an array with one entry per matching line
---     in `haystacks`, each entry giving the index of the line in `haystacks`
---     as well as the equivalent to the return value of `positions` for that
---     line.
+---@param needle string
+---@param haystacks string[]
+---@param case_sensitive boolean? defaults to false
+---@return {[1]: int, [2]: int[], [3]: number}[] an array with one entry per matching line
+--- in `haystacks`, each entry giving the index of the line in `haystacks`
+--- as well as the equivalent to the return value of `positions` for that
+--- line.
 function fzy.filter(needle, haystacks, case_sensitive)
   local result = {}
 
@@ -261,16 +241,19 @@ end
 --  - a `needle` or `haystack` larger than than `get_max_length`,
 -- the `score` function will return this exact value, which can be used as a
 -- sentinel. This is the lowest possible score.
+---@return number
 function fzy.get_score_min()
   return SCORE_MIN
 end
 
 -- The score returned for exact matches. This is the highest possible score.
+---@return number
 function fzy.get_score_max()
   return SCORE_MAX
 end
 
 -- The maximum size for which `fzy` will evaluate scores.
+---@return int
 function fzy.get_max_length()
   return MATCH_MAX_LENGTH
 end
@@ -279,6 +262,7 @@ end
 --
 -- For matches that don't return `get_score_min`, their score will be greater
 -- than than this value.
+---@return number
 function fzy.get_score_floor()
   return MATCH_MAX_LENGTH * SCORE_GAP_INNER
 end
@@ -287,11 +271,13 @@ end
 --
 -- For matches that don't return `get_score_max`, their score will be less than
 -- this value.
+---@return number
 function fzy.get_score_ceiling()
   return MATCH_MAX_LENGTH * SCORE_MATCH_CONSECUTIVE
 end
 
 -- The name of the currently-running implementation, "lua" or "native".
+---@return string
 function fzy.get_implementation_name()
   return "lua"
 end

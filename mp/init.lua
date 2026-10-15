@@ -1097,5 +1097,11 @@ mp.utils = mp_utils
 -- mount ok
 ---@type mp_options?
 mp.options = nil
+---@type mp_assdraw?
+mp.assdraw = nil
+---@type mp_fzy?
+mp.fzy = nil
+---@type mp_input?
+mp.input = nil
 
 return mp
