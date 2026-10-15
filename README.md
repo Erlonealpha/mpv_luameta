@@ -1,3 +1,5 @@
+[English](README.en.md) | 简体中文
+
 # mpv_luameta
 
 为 [mpv](https://mpv.io/) 的内置 Lua API 提供 [EmmyLua](https://emmylua.github.io/) 注解（type stub）的元数据包，让编辑器与语言服务器在编写 mpv Lua 脚本时给出补全、参数提示、悬停文档、跳转定义和类型检查。
